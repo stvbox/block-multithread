@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.google.guava:guava:33.0.0-jre")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

@@ -7,9 +7,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.AllArgsConstructor;
@@ -24,15 +26,15 @@ import org.springframework.util.MimeTypeUtils;
 @AllArgsConstructor
 public class RequestsManager {
 
-    private static Cache<Integer, ExecutorService> cache = CacheBuilder.newBuilder().build();
+    private static Cache<Integer, HttpClient> cache = CacheBuilder.newBuilder().build();
 
-    private final HttpClient httpClient;
-
-    HttpClient createClient(int threads) {
-        ExecutorService executorService = getExecutorService(threads);
-        return HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .executor(executorService).build();
+    HttpClient createClient(int threads) throws ExecutionException {
+        return cache.get(threads, () -> {
+            ExecutorService executorService = getExecutorService(threads);
+            return HttpClient.newBuilder()
+                    .version(HttpClient.Version.HTTP_2)
+                    .executor(executorService).build();
+        });
     }
 
     HttpRequest createRequest(String requestUrl) {
@@ -56,8 +58,8 @@ public class RequestsManager {
     }
 
     void makeAsyncRequests(List<HttpRequest> requests, int threadsCount) {
-        try (var client = createClient(threadsCount)) {
-
+        try {
+            var client = createClient(threadsCount);
             var completableFutures = requests.stream()
                     .map(request -> {
                         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
@@ -85,14 +87,12 @@ public class RequestsManager {
 
     @SneakyThrows
     static private ExecutorService getExecutorService(Integer threads) {
-        return cache.get(threads, () -> {
-            if (threads == -1) {
-                return Executors.newVirtualThreadPerTaskExecutor();
-            } else {
-                return threads == 1 ? Executors.newSingleThreadScheduledExecutor()
-                        : Executors.newScheduledThreadPool(threads);
-            }
-        });
+        if (threads == -1) {
+            return Executors.newVirtualThreadPerTaskExecutor();
+        } else {
+            return threads == 1 ? Executors.newSingleThreadScheduledExecutor()
+                    : Executors.newScheduledThreadPool(threads);
+        }
     }
 
 //    TestClientService.ResponseJsonObject readValueJackson(String content) {

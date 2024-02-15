@@ -1,6 +1,7 @@
 package foo.bar.rest;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class RestApplication {
     }
 
     @GetMapping("/test")
-    public String test() throws InterruptedException, IOException {
+    public String test() throws InterruptedException, IOException, ExecutionException {
 
         log.info("... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...");
         log.info("Crash Test Started...");

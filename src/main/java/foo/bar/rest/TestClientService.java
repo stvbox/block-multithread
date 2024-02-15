@@ -5,9 +5,11 @@ import static foo.bar.rest.RestApplication.REQUEST_URL;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.SneakyThrows;
 import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,7 @@ public class TestClientService {
 
     private final RequestsManager requestsManager;
 
-    public void makeWarmingUp() throws IOException, InterruptedException {
+    public void makeWarmingUp() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
         try (var client = requestsManager.createClient(1)) {
             requestsManager.makeSinkTestRequest(
@@ -30,7 +32,7 @@ public class TestClientService {
         log.info("Прогрев: {} мс", (System.currentTimeMillis() - startTime));
     }
 
-    public void makeSinkRequests1000() throws IOException, InterruptedException {
+    public void makeSinkRequests1000() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
         try (var client = requestsManager.createClient(1)) {
             for (var i = 0; i < 1000; i++) {
