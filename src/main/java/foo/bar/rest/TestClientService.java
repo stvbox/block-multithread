@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.SneakyThrows;
 import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
