@@ -3,6 +3,7 @@ package foo.bar.rest;
 import static foo.bar.rest.RestApplication.REQUEST_URL;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -24,22 +25,20 @@ public class TestClientService {
 
     public void makeWarmingUp() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
-        try (var client = requestsManager.createClient(1)) {
-            requestsManager.makeSinkTestRequest(
-                    client, requestsManager.createRequest(REQUEST_URL)
-            );
-        }
+        var client = requestsManager.createClient(1);
+        requestsManager.makeSinkTestRequest(
+                client, requestsManager.createRequest(REQUEST_URL)
+        );
         log.info("Прогрев: {} мс", (System.currentTimeMillis() - startTime));
     }
 
     public void makeSinkRequests1000() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
-        try (var client = requestsManager.createClient(1)) {
-            for (var i = 0; i < 1000; i++) {
-                requestsManager.makeSinkTestRequest(
-                        client, requestsManager.createRequest(REQUEST_URL)
-                );
-            }
+        HttpClient client = requestsManager.createClient(1);
+        for (var i = 0; i < 1000; i++) {
+            requestsManager.makeSinkTestRequest(
+                    client, requestsManager.createRequest(REQUEST_URL)
+            );
         }
         log.info("Синхрон(1000): {} мс", (System.currentTimeMillis() - startTime));
     }
