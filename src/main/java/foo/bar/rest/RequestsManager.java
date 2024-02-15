@@ -10,8 +10,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.AllArgsConstructor;
@@ -28,16 +26,18 @@ public class RequestsManager {
 
     private static Cache<Integer, ExecutorService> cache = CacheBuilder.newBuilder().build();
 
-    private final ObjectMapper mapper;
+    private final HttpClient httpClient;
 
     HttpClient createClient(int threads) {
         ExecutorService executorService = getExecutorService(threads);
-        return HttpClient.newBuilder().executor(executorService).build();
+        return HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .executor(executorService).build();
     }
 
     HttpRequest createRequest(String requestUrl) {
         return HttpRequest.newBuilder(URI.create(requestUrl)).GET()
-                .version(HttpClient.Version.HTTP_1_1)
+                .version(HttpClient.Version.HTTP_2)
                 .headers(
                         "Accept", MimeTypeUtils.APPLICATION_JSON_VALUE,
                         "Content-type", MimeTypeUtils.APPLICATION_JSON_VALUE
