@@ -1,24 +1,24 @@
 plugins {
-	java
-	id("org.springframework.boot") version "3.1.+"
-	id("io.spring.dependency-management") version "1.1.+"
+    java
+    id("org.springframework.boot") version "3.1.+"
+    id("io.spring.dependency-management") version "1.1.+"
 }
 
 group = "foo.bar"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
-	compileOnly {
-		extendsFrom(configurations.annotationProcessor.get())
-	}
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
@@ -30,9 +30,9 @@ dependencies {
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 tasks.bootBuildImage {
-	builder.set("paketobuildpacks/builder-jammy-base:latest")
+    builder.set("paketobuildpacks/builder-jammy-base:latest")
 }
