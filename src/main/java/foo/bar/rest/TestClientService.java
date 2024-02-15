@@ -35,11 +35,18 @@ public class TestClientService {
     public void makeSinkRequests1000() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
         HttpClient client = requestsManager.createClient(1);
+
         for (var i = 0; i < 1000; i++) {
-            requestsManager.makeSinkTestRequest(
-                    client, requestsManager.createRequest(REQUEST_URL)
-            );
+            try {
+                log.info("...makeSinkRequests1000");
+                requestsManager.makeSinkTestRequest(
+                        client, requestsManager.createRequest(REQUEST_URL)
+                );
+            } catch (Exception ex) {
+                log.error(ex.getMessage());
+            }
         }
+
         log.info("Синхрон(1000): {} мс", (System.currentTimeMillis() - startTime));
     }
 
