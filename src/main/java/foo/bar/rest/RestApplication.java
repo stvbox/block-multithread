@@ -32,6 +32,8 @@ public class RestApplication {
         log.info("Crash Test Started...");
 
         testClientService.makeWarmingUp();
+        testClientService.makeWarmingUp();
+        testClientService.makeWarmingUp();
         testClientService.makeSinkRequests1000();
         testClientService.makeAsyncRequests1000by1();
         testClientService.makeAsyncRequests1000by10();

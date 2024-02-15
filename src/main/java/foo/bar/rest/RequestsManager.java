@@ -32,14 +32,14 @@ public class RequestsManager {
         return cache.get(threads, () -> {
             ExecutorService executorService = getExecutorService(threads);
             return HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_2)
+                    .version(HttpClient.Version.HTTP_1_1)
                     .executor(executorService).build();
         });
     }
 
     HttpRequest createRequest(String requestUrl) {
         return HttpRequest.newBuilder(URI.create(requestUrl)).GET()
-                .version(HttpClient.Version.HTTP_2)
+                .version(HttpClient.Version.HTTP_1_1)
                 .headers(
                         "Accept", MimeTypeUtils.APPLICATION_JSON_VALUE,
                         "Content-type", MimeTypeUtils.APPLICATION_JSON_VALUE

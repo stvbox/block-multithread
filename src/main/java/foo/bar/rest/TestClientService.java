@@ -38,7 +38,7 @@ public class TestClientService {
 
         for (var i = 0; i < 1000; i++) {
             try {
-                log.info("...makeSinkRequests1000");
+                //log.info("...makeSinkRequests1000");
                 requestsManager.makeSinkTestRequest(
                         client, requestsManager.createRequest(REQUEST_URL)
                 );
