@@ -28,14 +28,15 @@ public class RestApplication {
 
     @GetMapping("/test1")
     public String test1() {
-        requestsManagerNetty.makeRequests1();
-        requestsManagerNetty.makeRequests1();
-        requestsManagerNetty.makeRequests1000();
-        requestsManagerNetty.makeRequests1000();
-        requestsManagerNetty.makeRequests10000();
-        requestsManagerNetty.makeRequests10000();
-        requestsManagerNetty.makeRequests10000();
-        requestsManagerNetty.makeRequests10000();
+        requestsManagerNetty.makeRequests(1);
+        requestsManagerNetty.makeRequests(1);
+        requestsManagerNetty.makeRequests(100);
+//        requestsManagerNetty.makeRequests(1000);
+//        requestsManagerNetty.makeRequests1000();
+//        requestsManagerNetty.makeRequests10000();
+//        requestsManagerNetty.makeRequests10000();
+//        requestsManagerNetty.makeRequests10000();
+//        requestsManagerNetty.makeRequests10000();
         return "test";
     }
 

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.concurrent.Executors;
 
 import static foo.bar.rest.RestApplication.REQUEST_URL;
 
@@ -22,35 +26,19 @@ public class RequestsManagerNetty {
                 .build();
     }
 
-    public void makeRequests1() {
-        int requestsCount = 1;
+    public void makeRequests(int requestsCount) {
         long startTime = System.currentTimeMillis();
-        Flux.range(0, requestsCount).flatMap(number -> {
-            return client.get().uri(REQUEST_URL).retrieve()
-                    .bodyToMono(String.class);
-        }).collectList().block();
-        log.info("Асинхрон({} запросов): {} мс",
-                requestsCount, System.currentTimeMillis() - startTime);
-    }
 
-    public void makeRequests1000() {
-        int requestsCount = 1000;
-        long startTime = System.currentTimeMillis();
-        Flux.range(0, requestsCount).flatMap(number -> {
-            return client.get().uri(REQUEST_URL).retrieve()
-                    .bodyToMono(String.class);
-        }).collectList().block();
-        log.info("Асинхрон({} запросов): {} мс",
-                requestsCount, System.currentTimeMillis() - startTime);
-    }
+        Scheduler scheduler
+                = Schedulers.fromExecutor(Executors.newVirtualThreadPerTaskExecutor());
 
-    public void makeRequests10000() {
-        int requestsCount = 10000;
-        long startTime = System.currentTimeMillis();
-        Flux.range(0, requestsCount).flatMap(number -> {
-            return client.get().uri(REQUEST_URL).retrieve()
-                    .bodyToMono(String.class);
-        }).collectList().block();
+        Flux.range(0, requestsCount)
+                .publishOn(scheduler)
+                .subscribeOn(scheduler)
+                .flatMap(number -> {
+                    return client.get().uri(REQUEST_URL).retrieve()
+                            .bodyToMono(String.class);
+                }).collectList().block();
         log.info("Асинхрон({} запросов): {} мс",
                 requestsCount, System.currentTimeMillis() - startTime);
     }
