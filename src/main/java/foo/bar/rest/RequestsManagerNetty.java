@@ -22,12 +22,36 @@ public class RequestsManagerNetty {
                 .build();
     }
 
-    public void makeRequests1000() {
+    public void makeRequests1() {
+        int requestsCount = 1;
         long startTime = System.currentTimeMillis();
-        Flux.range(0, 1000).flatMap(number -> {
+        Flux.range(0, requestsCount).flatMap(number -> {
             return client.get().uri(REQUEST_URL).retrieve()
                     .bodyToMono(String.class);
         }).collectList().block();
-        log.info("Асинхрон({} на {}): {} мс", 1000, 100, System.currentTimeMillis() - startTime);
+        log.info("Асинхрон({} запросов): {} мс",
+                requestsCount, System.currentTimeMillis() - startTime);
+    }
+
+    public void makeRequests1000() {
+        int requestsCount = 1000;
+        long startTime = System.currentTimeMillis();
+        Flux.range(0, requestsCount).flatMap(number -> {
+            return client.get().uri(REQUEST_URL).retrieve()
+                    .bodyToMono(String.class);
+        }).collectList().block();
+        log.info("Асинхрон({} запросов): {} мс",
+                requestsCount, System.currentTimeMillis() - startTime);
+    }
+
+    public void makeRequests10000() {
+        int requestsCount = 10000;
+        long startTime = System.currentTimeMillis();
+        Flux.range(0, requestsCount).flatMap(number -> {
+            return client.get().uri(REQUEST_URL).retrieve()
+                    .bodyToMono(String.class);
+        }).collectList().block();
+        log.info("Асинхрон({} запросов): {} мс",
+                requestsCount, System.currentTimeMillis() - startTime);
     }
 }
