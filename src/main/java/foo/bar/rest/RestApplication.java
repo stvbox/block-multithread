@@ -20,9 +20,16 @@ public class RestApplication {
     static final String REQUEST_URL = "http://192.168.0.110:8080/test-get";
 
     private final TestClientService testClientService;
+    private final RequestsManagerNetty requestsManagerNetty;
 
     public static void main(String[] args) {
         SpringApplication.run(RestApplication.class, args);
+    }
+
+    @GetMapping("/test1")
+    public String test1() {
+        requestsManagerNetty.makeRequests1000();
+        return "test";
     }
 
     @GetMapping("/test")

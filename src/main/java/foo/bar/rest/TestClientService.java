@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class TestClientService {
 
-    private final RequestsManager requestsManager;
+    private final RequestsManagerOrigin requestsManager;
 
     public void makeWarmingUp() throws IOException, InterruptedException, ExecutionException {
         long startTime = System.currentTimeMillis();
