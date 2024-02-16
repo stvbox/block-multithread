@@ -26,8 +26,7 @@ dependencies {
     //implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework:spring-webflux")
     implementation("org.eclipse.jetty.http2:http2-client:11.0.20")
-
-
+    
     implementation("com.google.guava:guava:33.0.0-jre")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
